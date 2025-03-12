@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "628443235801",
+    "project_id": "omnyqr-a19ef",
+    "storage_bucket": "omnyqr-a19ef.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:628443235801:android:45255b0ae2c5a0635ac5c8",
+        "android_client_info": {
+          "package_name": "com.evologic.omnyqr"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3DFooJ8WJchVDFkRJNMSt7AJ577TnrX4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:628443235801:android:77ca31999d5e719f5ac5c8",
+        "android_client_info": {
+          "package_name": "com.example.omnyqr"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3DFooJ8WJchVDFkRJNMSt7AJ577TnrX4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
