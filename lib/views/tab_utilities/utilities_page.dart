@@ -43,6 +43,8 @@ class UtilitiesPage extends StatelessWidget {
                   onRefresh: () {
                     return Future.delayed(const Duration(seconds: 0), () {
                       context.read<ContainerBloc>().add(RefreshUtilities());
+                      print('[DEBUG] RefreshUtilities inviato  da pull');
+
                     });
                   },
                   child: Column(

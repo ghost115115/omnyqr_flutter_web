@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 import 'dart:developer';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,6 +18,8 @@ import 'package:omnyqr/models/user.dart';
 import 'package:omnyqr/models/utility.dart';
 import 'package:omnyqr/views/call_screen/call_screen.dart';
 import 'package:omnyqr/views/main_container/bloc/container_bloc.dart';
+import 'package:omnyqr/models/referent.dart';
+
 
 class UtilitySectionPage extends StatefulWidget {
   const UtilitySectionPage({super.key});
@@ -29,6 +32,8 @@ class _UtilitySectionPageState extends State<UtilitySectionPage> {
   @override
   Widget build(BuildContext context) {
     Utility? params = ModalRoute.of(context)!.settings.arguments as Utility?;
+
+
     User? user = context.select((ContainerBloc bloc) => bloc.state.user);
     joinCall({
       required String callerId,
@@ -171,11 +176,16 @@ class _UtilitySectionPageState extends State<UtilitySectionPage> {
 
                               if (result ?? false) {
                                 if (params?.canCall == true) {
-                                  joinCall(
-                                    callerId: user?.id ?? '',
-                                    calleeId:
-                                        params?.backupReferent?.user ?? '',
-                                  );
+                                  final calleeId = params?.backupReferent?.user;
+                                  if (calleeId != null && calleeId.isNotEmpty) {
+                                     joinCall(
+                                      callerId: user?.id ?? '',
+                                      calleeId: calleeId,
+                                      );
+                                     } else {
+                                        print('❌ Nessun backupReferent valido selezionato');
+                                       }
+
                                 } else {
                                   showDialog(
                                       context: context,
@@ -193,12 +203,17 @@ class _UtilitySectionPageState extends State<UtilitySectionPage> {
                               }
                             } else {
                               if (params?.canCall == true) {
-                                joinCall(
-                                  callerId: user?.id ?? '',
-                                  calleeId:
-                                      params?.referents?[index].user ?? '',
-                                );
-                              } else {
+                                final calleeId = params?.referents?[index].user;
+                                if (calleeId != null && calleeId.isNotEmpty) {
+                                  joinCall(
+                                    callerId: user?.id ?? '',
+                                    calleeId: calleeId,
+                                  );
+                                } else {
+                                  print('❌ Nessun referent valido selezionato');
+                                }
+                              }
+                              else {
                                 showDialog(
                                     context: context,
                                     builder: (context) {

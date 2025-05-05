@@ -30,7 +30,8 @@ class ResetDialog extends OverviewPageEvent {}
 class OnOffUtility extends OverviewPageEvent {
   final String? associationId;
   final String? utilityId;
-  const OnOffUtility({this.associationId, this.utilityId});
+  final bool? value;
+  const OnOffUtility({this.associationId, this.utilityId, this.value});
 }
 
 class DeleteUserEvent extends OverviewPageEvent {

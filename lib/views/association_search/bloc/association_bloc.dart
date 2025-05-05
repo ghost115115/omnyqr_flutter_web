@@ -18,18 +18,26 @@ class AssociationBloc extends Bloc<AssociationEvent, AssociationState> {
   }
 
   _onInit(AssociationInitEvent event, Emitter<AssociationState> emit) async {
+    print('[DEBUG] AssociationInitEvent ricevuto');
+
     emit(state.copyWith(isLoading: true));
+
+
 
     switch (getQrType(event.value ?? '')) {
       case QrType.mine:
         emit(state.copyWith(
           title: tr('select_condominium'),
         ));
+        print('[DEBUG] Stato aggiornato con nuove associazioni - mine');
+
         break;
       case QrType.business:
         emit(state.copyWith(
           title: tr('select_business'),
         ));
+        print('[DEBUG] Stato aggiornato con nuove associazioni - Buss');
+
         break;
 
       default:

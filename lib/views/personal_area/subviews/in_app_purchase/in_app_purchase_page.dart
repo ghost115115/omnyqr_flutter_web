@@ -1,7 +1,8 @@
 // ignore_for_file: unused_element
 
 import 'dart:async';
-import 'dart:io';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -83,7 +84,7 @@ class _MyAppState extends State<InAppPurchasePage> {
       return;
     }
 
-    if (Platform.isIOS) {
+    if (!kIsWeb && Platform.isIOS) {
       final InAppPurchaseStoreKitPlatformAddition iosPlatformAddition =
           _inAppPurchase
               .getPlatformAddition<InAppPurchaseStoreKitPlatformAddition>();

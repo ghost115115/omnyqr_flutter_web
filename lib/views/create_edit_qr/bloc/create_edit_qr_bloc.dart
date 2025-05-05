@@ -95,7 +95,9 @@ class CreateEditQrBloc extends Bloc<CreateEditQrEvent, CreateEditQrState> {
           isEdit: event.isEdit,
           associationId: event.association?.id,
           utilityId: event.association?.utilities?[event.index ?? 0].id,
-          privatePublicToggle: false,
+        //  privatePublicToggle: false,
+          privatePublicToggle: event.association?.utilities?[event.index ?? 0].isPrivate ?? true,
+
         ));
         break;
       case QrType.business:
@@ -128,7 +130,12 @@ class CreateEditQrBloc extends Bloc<CreateEditQrEvent, CreateEditQrState> {
             isEdit: event.isEdit,
             associationId: event.association?.id,
             utilityId: event.association?.utilities?[event.index ?? 0].id,
-            privatePublicToggle: false));
+           // privatePublicToggle: false
+            privatePublicToggle: event.association?.utilities?[event.index ?? 0].isPrivate ?? true,
+
+
+        ));
+
         break;
       case QrType.lost:
         emit(state.copyWith(
@@ -151,7 +158,9 @@ class CreateEditQrBloc extends Bloc<CreateEditQrEvent, CreateEditQrState> {
             registry: event.association?.utilities?[event.index ?? 0].details,
             isEdit: event.isEdit,
             associationId: event.association?.id,
-            utilityId: event.association?.utilities?[event.index ?? 0].id));
+            utilityId: event.association?.utilities?[event.index ?? 0].id,
+            privatePublicToggle: event.association?.utilities?[event.index ?? 0].isPrivate ?? true,
+        ));
         break;
       case QrType.going:
         emit(
@@ -188,7 +197,9 @@ class CreateEditQrBloc extends Bloc<CreateEditQrEvent, CreateEditQrState> {
               registry: event.association?.utilities?[event.index ?? 0].details,
               isEdit: event.isEdit,
               associationId: event.association?.id,
-              utilityId: event.association?.utilities?[event.index ?? 0].id),
+              utilityId: event.association?.utilities?[event.index ?? 0].id,
+              privatePublicToggle: event.association?.utilities?[event.index ?? 0].isPrivate ?? true,)
+
         );
         break;
       case QrType.emergency:
@@ -212,7 +223,9 @@ class CreateEditQrBloc extends Bloc<CreateEditQrEvent, CreateEditQrState> {
             registry: event.association?.utilities?[event.index ?? 0].details,
             isEdit: event.isEdit,
             associationId: event.association?.id,
-            utilityId: event.association?.utilities?[event.index ?? 0].id));
+            utilityId: event.association?.utilities?[event.index ?? 0].id,
+            privatePublicToggle: event.association?.utilities?[event.index ?? 0].isPrivate ?? true
+        ));
         break;
       case QrType.price:
         emit(state.copyWith(
@@ -260,7 +273,9 @@ class CreateEditQrBloc extends Bloc<CreateEditQrEvent, CreateEditQrState> {
             registry: event.association?.utilities?[event.index ?? 0].details,
             isEdit: event.isEdit,
             associationId: event.association?.id,
-            utilityId: event.association?.utilities?[event.index ?? 0].id));
+            utilityId: event.association?.utilities?[event.index ?? 0].id,
+            privatePublicToggle: event.association?.utilities?[event.index ?? 0].isPrivate ?? true,
+        ));
         break;
       default:
     }

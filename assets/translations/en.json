@@ -112,6 +112,7 @@
     "open_qr": "Open QR",
     "delete_utility_title": "Delete Utility",
     "account_delete": "Attention!\nBy confirming 'Yes', your account and all associated utilities will be deleted.\nYou will not be able to recover them, continue?",
+    "type_delete_to_confirm": "Write 'delete' ",
     "account_delete_success": "Account successfully deleted",
     "profile_update_success": "Information successfully updated",
     "accept": "Accept",

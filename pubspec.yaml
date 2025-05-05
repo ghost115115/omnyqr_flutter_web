@@ -52,12 +52,15 @@ dependencies:
   image_gallery_saver: ^2.0.3
   path_provider: ^2.1.1
   permission_handler: ^11.3.0
-  flutter_webrtc: 0.9.47
+  #flutter_webrtc: 0.9.47
+  flutter_webrtc: ^0.13.1+hotfix.1
+
   socket_io_client: ^2.0.3+1
-  firebase_messaging: ^14.7.9
-  firebase_core: ^2.24.2
+  firebase_messaging: ^15.2.5
+  firebase_core: ^3.13.0
+  firebase_analytics: ^11.4.5
+
   uuid: ^4.2.2
-  firebase_analytics: ^10.8.0
   flutter_callkit_incoming: ^2.0.1+2
   file_picker: ^6.1.1
   geolocator: ^10.1.0

@@ -35,6 +35,8 @@ class OverviewPageState extends Equatable {
   final bool? showCondominium;
   final bool? isLoading;
   final bool? showfile;
+  final bool? justUpdated;
+
 
   //
   final String? associationId;
@@ -49,6 +51,8 @@ class OverviewPageState extends Equatable {
     this.type,
     this.utility,
     this.associationName,
+    this.justUpdated,
+
     // conf
     this.addressLabel,
     this.groupCheckBoxLabel,
@@ -79,7 +83,8 @@ class OverviewPageState extends Equatable {
       String? subTitle,
       String? type,
       Utility? utility,
-      String? associationName,
+
+        String? associationName,
       //conf
       String? addressLabel,
       String? groupLabel,
@@ -100,7 +105,9 @@ class OverviewPageState extends Equatable {
       bool? showName,
       bool? showUrl,
       bool? showfile,
-      //
+      bool? justUpdated, // <-- aggiungi anche qui
+
+        //
       String? associationId,
       DeleteStatus? status,
       bool? privatePublicToggle}) {
@@ -109,6 +116,7 @@ class OverviewPageState extends Equatable {
       subTitle: subTitle ?? this.subTitle,
       type: type ?? this.type,
       utility: utility ?? this.utility,
+      justUpdated: justUpdated ?? this.justUpdated, // <-- qui
       qrUrl: qrUrl ?? this.qrUrl,
       associationName: associationName ?? this.associationName,
       addressLabel: addressLabel ?? this.addressLabel,

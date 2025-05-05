@@ -13,6 +13,7 @@ class RoundBorderContainerBig extends StatelessWidget {
         
        
         decoration: BoxDecoration(
+            color: Colors.blue.withOpacity(0.05), // Sfondo blu semi-trasparente
             border: Border.all(
               color: AppColors.containerBig,
             ),

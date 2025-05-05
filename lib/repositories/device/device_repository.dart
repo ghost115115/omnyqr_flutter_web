@@ -1,5 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:omnyqr/clients/device/device_api_client.dart';
@@ -11,6 +13,7 @@ class DeviceRepository {
   late final DeviceApiClient _deviceApiClient;
   DeviceRepository(this._deviceApiClient);
 
+
   Future<ApiResponse<String?>> registerFcmToken(
     String fcmToken,
     String apnToken,
@@ -18,7 +21,9 @@ class DeviceRepository {
     try {
       String id = '';
       final deviceInfoPlugin = DeviceInfoPlugin();
-      if (Platform.isAndroid) {
+      if (kIsWeb) {
+        id = 'web-browser-${DateTime.now().millisecondsSinceEpoch}';
+      } else if (Platform.isAndroid) {
         final androidInfo = await deviceInfoPlugin.androidInfo;
         id = androidInfo.id;
       } else if (Platform.isIOS) {

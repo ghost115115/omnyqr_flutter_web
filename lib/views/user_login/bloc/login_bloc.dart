@@ -1,7 +1,10 @@
-import 'dart:io';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mine_pushkit/mine_pushkit.dart';
@@ -81,11 +84,29 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
               selfCallerID: selfCallerID,
               callKit: 'false');
         }
-        if (Platform.isIOS) {
+       /* if (!kIsWeb && Platform.isIOS) {
           apnToken = MinePushkit.instance.token ?? '';
         }
 
-        await _deviceRepository.registerFcmToken(fbToken ?? '', apnToken);
+        await _deviceRepository.registerFcmToken(fbToken ?? '', apnToken);*/
+
+
+
+        if (kIsWeb) {
+          // Token fittizi per Web
+          apnToken = 'web-apn-placeholder';
+          fbToken = 'web-fcm-placeholder';
+        } else {
+          fbToken = await FirebaseMessaging.instance.getToken() ?? '';
+          if (Platform.isIOS) {
+            apnToken = MinePushkit.instance.token ?? '';
+          }
+        }
+
+        await _deviceRepository.registerFcmToken(fbToken, apnToken);
+
+
+
         authenticationBloc.add(AuthenticationLoggedEvent());
         // check nell'account per verificare se si è stati bannati
         if (response.value?.user?.enabled == false) {
@@ -124,10 +145,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   Future<bool> isEmulator() async {
     final deviceInfo = DeviceInfoPlugin();
 
-    if (Platform.isAndroid) {
+    if (!kIsWeb && Platform.isAndroid) {
       final androidInfo = await deviceInfo.androidInfo;
       return androidInfo.isPhysicalDevice == false;
-    } else if (Platform.isIOS) {
+    } else if (!kIsWeb && Platform.isIOS) {
       final iosInfo = await deviceInfo.iosInfo;
       return iosInfo.isPhysicalDevice == false;
     }

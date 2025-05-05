@@ -422,15 +422,20 @@ class _CreateEditQrPageState extends State<CreateEditQrPage> {
                         ],
                       ),
                     ),
-
+/*getQrType(params?.association?.associationType ??'') ==QrType.mine ||
+                                     getQrType(params?.association?.associationType ??'') ==QrType.business ||
+                                     getQrType(params?.association?.associationType ??'') ==QrType.lost ||
+                                getQrType(params?.association?.associationType ??'') ==QrType.assistance||
+                                getQrType(params?.association?.associationType ??'') ==QrType.going||
+                                getQrType(params?.association?.associationType ??'') ==QrType.emergency,
+ */
                     Visibility(
-                      visible: (getQrType(
-                                      params?.association?.associationType ??
-                                          '') ==
-                                  QrType.mine ||
-                              getQrType(params?.association?.associationType ??
-                                      '') ==
-                                  QrType.business) &&
+                      visible: (getQrType(params?.association?.associationType ??'') == QrType.mine ||
+                                getQrType(params?.association?.associationType ?? '') == QrType.lost ||
+                                getQrType(params?.association?.associationType ??'') == QrType.business ||
+                          getQrType(params?.association?.associationType ??'') ==QrType.assistance||
+                          getQrType(params?.association?.associationType ??'') ==QrType.going||
+                          getQrType(params?.association?.associationType ??'') ==QrType.emergency) &&
                           params?.isEdit != true,
                       child: Row(
                         children: [

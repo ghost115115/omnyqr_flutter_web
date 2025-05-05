@@ -21,6 +21,8 @@ import 'package:omnyqr/commons/widgets/common_page_header.dart';
 import 'package:omnyqr/commons/widgets/loader/loading_view.dart';
 import 'package:omnyqr/repositories/utilities/utility_repo.dart';
 import 'package:omnyqr/views/create_edit_qr/bloc/create_edit_qr_bloc.dart';
+import 'package:omnyqr/views/main_container/bloc/container_bloc.dart';
+import 'package:omnyqr/views/main_container/bloc/container_event.dart';
 import 'package:omnyqr/views/utility_overview/bloc/overview_page_bloc.dart';
 import 'package:widgets_to_image/widgets_to_image.dart';
 import '../../commons/constants/omny_colors.dart';
@@ -37,7 +39,25 @@ class UtilityOverViewPage extends StatefulWidget {
 
 class _UtilityOverViewPageState extends State<UtilityOverViewPage> {
   Uint8List? bytes;
+ // bool _hasReloaded = false;
 
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      AssociationWrapper? params =
+      ModalRoute.of(context)!.settings.arguments as AssociationWrapper?;
+
+      context.read<OverviewPageBloc>().add(
+        OverviewPageInitEvent(
+          association: params?.association,
+          index: params?.index,
+          isReal: params?.isReal,
+        ),
+      );
+    });
+  }
   @override
   Widget build(BuildContext context) {
     AssociationWrapper? params =
@@ -184,6 +204,8 @@ class _UtilityOverViewPageState extends State<UtilityOverViewPage> {
           }
         },
         builder: (context, state) {
+          print('[UI] rebuild switch: isActive = ${state.isActive}');
+
           return Scaffold(
             appBar: AppBar(
               elevation: 0,
@@ -199,7 +221,10 @@ class _UtilityOverViewPageState extends State<UtilityOverViewPage> {
                     highlightColor: Colors.transparent,
                     hoverColor: Colors.transparent,
                     onTap: () {
-                      Navigator.pop(context);
+                      print('[DEBUG] Navigazione verso la schermata dello switch');
+                      context.read<ContainerBloc>().add(RefreshUtilities());
+
+                      Navigator.pop(context, true);
                     },
                     child: SvgPicture.asset(
                       AppImages.backIcon,
@@ -329,14 +354,12 @@ class _UtilityOverViewPageState extends State<UtilityOverViewPage> {
                             ),
                           ),
                           Visibility(
-                            visible: getQrType(
-                                        params?.association?.associationType ??
-                                            '') ==
-                                    QrType.mine ||
-                                getQrType(
-                                        params?.association?.associationType ??
-                                            '') ==
-                                    QrType.business,
+                            visible: getQrType(params?.association?.associationType ??'') ==QrType.mine ||
+                                     getQrType(params?.association?.associationType ??'') ==QrType.business ||
+                                     getQrType(params?.association?.associationType ??'') ==QrType.lost ||
+                                getQrType(params?.association?.associationType ??'') ==QrType.assistance||
+                                getQrType(params?.association?.associationType ??'') ==QrType.going||
+                                getQrType(params?.association?.associationType ??'') ==QrType.emergency,
                             child: Row(
                               children: [
                                 IconButton(
@@ -389,47 +412,85 @@ class _UtilityOverViewPageState extends State<UtilityOverViewPage> {
                           SizedBox(
                             height: 25.h,
                           ),
-                          Visibility(
-                            visible: params?.association?.amIOwner == true ||
-                                params?.association?.isRealAssociation == true,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
                             child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  tr('availability'),
-                                  style: AppTypografy.commonBlack16W700,
-                                ),
-                                const Spacer(),
-                                Container(
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: AppColors.mainBlue,
-                                          width: 1.5),
-                                      borderRadius: BorderRadius.circular(25.h),
-                                      color: AppColors.commonWhite),
-                                  width: 110.w,
-                                  height: 40.h,
-                                  child: InkWell(
-                                    splashColor: Colors.transparent,
-                                    borderRadius: BorderRadius.circular(25.h),
-                                    enableFeedback: true,
-                                    onTap: () {
+                                // Pulsante "Set"
+                                Expanded(
+                                  child: ElevatedButton(
+                                    onPressed: () {
+
                                       Navigator.of(context).pushNamed(
                                           Routes.availabilities,
                                           arguments: state.utility);
+
                                     },
-                                    child: Center(
-                                        child: Text(
-                                      tr('set_availabilities'),
-                                      style: TextStyle(
-                                          color: AppColors.mainBlue,
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 16.sp),
-                                    )),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.blue[900],
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(30),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(vertical: 14),
+                                    ),
+                                    child: const Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.access_time, color: Colors.white),
+                                        SizedBox(width: 8),
+                                        Text(
+                                          'Set',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        SizedBox(width: 8),
+                                        Icon(Icons.double_arrow_rounded, color: Colors.white),
+                                      ],
+                                    ),
                                   ),
-                                )
+                                ),
+                                const SizedBox(width: 16),
+
+                                // Pulsante "Salva"
+                                Expanded(
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      print('[DEBUG] Navigazione verso la schermata del tasto salva');
+                                      context.read<ContainerBloc>().add(RefreshUtilities());
+                                      Navigator.pop(context, true);
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.blue[900],
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(30),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(vertical: 14),
+                                    ),
+                                    child: const Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'Salva',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        SizedBox(width: 8),
+                                        Icon(Icons.double_arrow_rounded, color: Colors.white),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ),
+
                           SizedBox(
                             height: 25.h,
                           ),
@@ -676,46 +737,110 @@ class _UtilityOverViewPageState extends State<UtilityOverViewPage> {
                               ),
                             ),
                           ),
-                          Visibility(
-                            visible: params?.association?.amIOwner == true,
-                            child: CommonInconButton(
-                              height: 40.h,
-                              title: tr("delete_utility_title"),
-                              brColor: AppColors.lightGrey,
-                              txtColor: AppColors.lightGrey,
-                              onTap: () {
-                                showDialog(
-                                    context: context,
-                                    builder: (_) {
-                                      return BlocProvider.value(
-                                        value: context.read<OverviewPageBloc>(),
-                                        child: CommonDialog(
-                                          btn2Label: tr('no'),
-                                          btn1Label: tr('yes'),
-                                          isBtn1Enabled: true,
-                                          title: tr('delete_utility'),
-                                          onTap2: () {
-                                            Navigator.pop(context);
-                                          },
-                                          onTap1: () {
-                                            context
-                                                .read<OverviewPageBloc>()
-                                                .add(DeleteUtilityEvent(
-                                                    utilityId: params
-                                                        ?.association
-                                                        ?.utilities?[
-                                                            params.index ?? 0]
-                                                        .id,
-                                                    associationId: params
-                                                        ?.association?.id));
-                                            Navigator.pop(context);
-                                          },
-                                        ),
-                                      );
-                                    });
-                              },
+
+
+                    Visibility(
+                    visible: params?.association?.amIOwner == true,
+                      child: CommonInconButton(
+                        height: 40.h,
+                        title: tr("delete_utility_title"),
+                        brColor: AppColors.lightGrey,
+                        txtColor: AppColors.lightGrey,
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (_) {
+                              String confirmationText = ""; // 🔁 RESET ogni apertura del dialog
+
+                              return BlocProvider.value(
+                                value: context.read<OverviewPageBloc>(),
+                                child: StatefulBuilder(
+                                  builder: (context, setState) {
+
+
+                                    return CommonDialog(
+                                      title: tr('delete_utility'),
+                                      btn2Label: tr('no'),
+                                      btn1Label: tr('yes'),
+                                      isBtn1Enabled: confirmationText.toLowerCase() == 'delete',
+                                      onTap2: () {
+                                        Navigator.pop(context);
+                                      },
+                                      onTap1: () {
+                                        context.read<OverviewPageBloc>().add(
+                                          DeleteUtilityEvent(
+                                            utilityId: params?.association?.utilities?[params.index ?? 0].id,
+                                            associationId: params?.association?.id,
+                                          ),
+                                        );
+                                        Navigator.pop(context);
+                                      },
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            tr("type_delete_to_confirm"),
+                                            style: AppTypografy.common14,
+                                          ),
+                                          const SizedBox(height: 12),
+                                          TextField(
+                                            onChanged: (value) {
+                                              setState(() {
+                                                confirmationText = value;
+                                              });
+                                            },
+                                            decoration: const InputDecoration(
+                                              hintText: "delete",
+                                              border: OutlineInputBorder(),
+                                              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+
+                    /* Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+                            child: SizedBox(
+                              width: double.infinity,
+                              height: 50,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  print('[DEBUG] Navigazione verso la schermata del tasto salva');
+                                  context.read<ContainerBloc>().add(RefreshUtilities());
+                                  Navigator.pop(context, true);
+
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blue[900],
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Save',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
+                          ),*/
+
+
+
+
                           Padding(
                             padding: EdgeInsets.only(top: 10.h),
                             child: Visibility(

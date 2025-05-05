@@ -56,10 +56,6 @@ import 'views/create_edit_qr/create_edit_qr.dart';
 import 'views/main_container/bloc/container_event.dart';
 import 'views/personal_area/subviews/change_password/change_password.dart';
 import 'views/user_registration/registration_view.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:firebase_core/firebase_core.dart';
-
-
 final RouteObserver<ModalRoute<void>> routeObserver = RouteObserver<ModalRoute<void>>();
 
 @pragma("vm:entry-point")
@@ -77,9 +73,8 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
   if (user != null) {
     if (message.data['type'] == "CALL") {
-     // const String websocketUrl = "http://162.19.244.59:8080";
-      const websocketUrl = "https://wrtc.smlwebdesign.it";
-      print(websocketUrl);
+      const String websocketUrl = "http://162.19.244.59:8080";
+
       //"http://192.168.1.106:8080";
 
       // generate callerID of local user
@@ -105,7 +100,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
         }
       });
       SignallingService.instance.socket!.on("closeNotification", (data) async {
-        if (!kIsWeb && Platform.isAndroid) {
+        if (Platform.isAndroid) {
           FlutterCallkitIncoming.endCall(newId);
           FlutterCallkitIncoming.endAllCalls();
           showCallkitIncoming(
@@ -162,15 +157,15 @@ void _onCallDeclinedFromCallKit(User user, CallEvent event) {
 }
 
 Future<void> showCallkitIncoming(
-    String uuid,
-    String msg,
-    String sender,
-    String receiver,
-    String name,
-    String utilityName,
-    int? duration,
-    bool? show,
-    ) async {
+  String uuid,
+  String msg,
+  String sender,
+  String receiver,
+  String name,
+  String utilityName,
+  int? duration,
+  bool? show,
+) async {
   String nameCaller = "";
   if (utilityName.isEmpty) {
     nameCaller = name;
@@ -204,7 +199,7 @@ Future<void> showCallkitIncoming(
       isShowLogo: true,
       ringtonePath: 'system_ringtone_default',
       backgroundColor: '#961132',
-      // backgroundUrl: 'assets/test.png',
+     // backgroundUrl: 'assets/test.png',
       actionColor: '#4CAF50',
     ),
     ios: const IOSParams(
@@ -241,26 +236,13 @@ void main() async {
   Load env file
   */
   await dotenv.load(fileName: ".env");
-  if (kIsWeb) {
-    await Firebase.initializeApp(
-      options: const FirebaseOptions(
-          apiKey: "AIzaSyCaEmQSIxoBxyDzi1gpxbyBNor3AsP36vY",
-          authDomain: "omnyqr-a19ef.firebaseapp.com",
-          projectId: "omnyqr-a19ef",
-          storageBucket: "omnyqr-a19ef.firebasestorage.app",
-          messagingSenderId: "628443235801",
-          appId: "1:628443235801:web:c7aecf58668455135ac5c8"
-      ),
-    );
-  } else {
-    await Firebase.initializeApp();
-  }
+
   /**
    * Init Firebase
    */
 
   // remove system device orientation
-  if (!kIsWeb && Platform.isIOS) {
+  if (Platform.isIOS) {
     MinePushkit.instance.didReciveIncomingClosedCallNotification = ((event) {
       final String? ssUrl = dotenv.env["SS_URL"];
       String websocketUrl = ssUrl ?? '';
@@ -308,7 +290,7 @@ void main() async {
   await Firebase.initializeApp();
 
   FirebaseMessaging.instance.onTokenRefresh.listen(
-        (event) async {
+    (event) async {
       await DeviceRepository(DeviceApiClient(PreferencesRepo()))
           .registerFcmToken(
         event,
@@ -329,7 +311,7 @@ void main() async {
     inspect('object');
     SignallingService.instance.socket!.on("closeNotification", (data) async {
       inspect('object');
-      if (!kIsWeb && Platform.isAndroid) {
+      if (Platform.isAndroid) {
         FlutterCallkitIncoming.endCall(newId);
         FlutterCallkitIncoming.endAllCalls();
         showCallkitIncoming(
@@ -373,7 +355,7 @@ void main() async {
 
   // ignore: unused_local_variable
   final notificationSettings =
-  await FirebaseMessaging.instance.requestPermission(
+      await FirebaseMessaging.instance.requestPermission(
     provisional: true,
   );
 
@@ -383,15 +365,13 @@ void main() async {
     // APNS token is available, make FCM plugin API requests...
   }
 
-  /**
-   *   var fbToken = await FirebaseMessaging.instance.getToken();
-      print(fbToken);
-   */
+/**
+ *   var fbToken = await FirebaseMessaging.instance.getToken();
+  print(fbToken);
+ */
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  if (!kIsWeb) {
-    HttpOverrides.global = MyHttpOverrides();
-  }
+  HttpOverrides.global = MyHttpOverrides();
   runApp(
     EasyLocalization(
       path: 'assets/translations',
@@ -432,7 +412,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(state);
 
     if (state == AppLifecycleState.resumed) {
-      if (!kIsWeb && Platform.isIOS) {}
+      if (Platform.isIOS) {}
     }
   }
 
@@ -508,19 +488,19 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                 Routes.msgDetails: (_) => const MessageDetails(),
                 Routes.createUtils: (_) => const CreateUtilsPage(),
                 Routes.personalInformation: (_) =>
-                const PersonalInformationPage(),
+                    const PersonalInformationPage(),
                 Routes.changePassword: (_) => const ChangePasswordPage(),
                 Routes.createEditQr: (_) => const CreateEditQrPage(),
                 Routes.utilityOverView: (_) => const UtilityOverViewPage(),
                 Routes.associationOverView: (_) =>
-                const AssociationOverviewPage(),
+                    const AssociationOverviewPage(),
                 Routes.userSearch: (_) => const UserSearchPage(),
                 Routes.association: (_) => const AssociationPage(),
                 Routes.createAssociation: (_) => const AssociationCreatePage(),
                 Routes.availabilities: (_) => const AvailabilitiesPage(),
                 Routes.qrScannerPage: (_) => const QrScannerPage(),
                 Routes.associationSection: (_) =>
-                const AssociationSectionPage(),
+                    const AssociationSectionPage(),
                 Routes.utilitySection: (_) => const UtilitySectionPage(),
                 Routes.messagePage: (_) => const SendMessagePage(),
                 Routes.inAppPurchase: (_) => const InAppPurchasePage(),

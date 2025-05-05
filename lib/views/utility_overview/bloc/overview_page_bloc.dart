@@ -24,6 +24,9 @@ class OverviewPageBloc extends Bloc<OverviewPageEvent, OverviewPageState> {
   }
 
   _onInit(OverviewPageInitEvent event, Emitter<OverviewPageState> emit) async {
+    //emit(state.copyWith(isLoading: true));
+
+
     Utility? data = event.association?.utilities?[event.index ?? 0];
 
     switch (getQrType(event.association?.associationType ?? '')) {
@@ -53,9 +56,11 @@ class OverviewPageBloc extends Bloc<OverviewPageEvent, OverviewPageState> {
             showCondominium: event.isReal,
             groupCheckBoxLabel: tr('utils_checkbox_office_txt'),
             utility: data,
-            associationName: event.association?.name));
+            associationName: event.association?.name,
+            privatePublicToggle: data?.isPrivate));
 
-        break;
+
+    break;
       case QrType.lost:
         emit(state.copyWith(
             title: tr('lost_title'),
@@ -65,7 +70,9 @@ class OverviewPageBloc extends Bloc<OverviewPageEvent, OverviewPageState> {
             showMember: true,
             isActive: data?.isActive,
             utility: data,
-            associationName: event.association?.name));
+            associationName: event.association?.name,
+            privatePublicToggle: data?.isPrivate
+    ));
 
         break;
       case QrType.going:
@@ -79,7 +86,9 @@ class OverviewPageBloc extends Bloc<OverviewPageEvent, OverviewPageState> {
             showAddress: true,
             isActive: data?.isActive,
             showMember: true,
-            associationName: event.association?.name));
+            associationName: event.association?.name,
+            privatePublicToggle: data?.isPrivate
+        ));
 
         break;
       case QrType.emergency:
@@ -91,7 +100,9 @@ class OverviewPageBloc extends Bloc<OverviewPageEvent, OverviewPageState> {
             isActive: data?.isActive,
             showIntercom: true,
             showMember: true,
-            associationName: event.association?.name));
+            associationName: event.association?.name,
+            privatePublicToggle: data?.isPrivate
+        ));
 
         break;
       case QrType.price:
@@ -116,7 +127,8 @@ class OverviewPageBloc extends Bloc<OverviewPageEvent, OverviewPageState> {
             utility: data,
             showIntercom: true,
             showMember: true,
-            associationName: event.association?.name));
+            associationName: event.association?.name,
+            privatePublicToggle: data?.isPrivate));
 
         break;
       default:
@@ -200,6 +212,8 @@ class OverviewPageBloc extends Bloc<OverviewPageEvent, OverviewPageState> {
     emit(state.copyWith(status: DeleteStatus.init));
   }
 
+
+
   _onOnOff(OnOffUtility event, Emitter<OverviewPageState> emit) async {
     emit(state.copyWith(isLoading: true));
 
@@ -225,6 +239,7 @@ class OverviewPageBloc extends Bloc<OverviewPageEvent, OverviewPageState> {
       }
     }
   }
+
 
   _publicPrivate(
       PublicPrivateUtility event, Emitter<OverviewPageState> emit) async {

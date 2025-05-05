@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:omnyqr/clients/base_auth_api.dart';
 import 'package:omnyqr/commons/constants/omny_urls.dart';
 import 'package:omnyqr/extensions/dio_extension.dart';
@@ -34,11 +35,41 @@ class MessageApiClient extends BaseAuthApi {
     });
   }
 
-  Future<Response<String?>> sendPush(
-      String id, String type, String name) async {
-    return makeAuthCall(() {
-      return client.responseGet<String>(Urls.sendPush, null,
-          {"calleeId": id, "notifType": type, "utilityName": name});
-    });
+
+
+  Future<Response<String?>> sendPush(String id, String type, String name) async {
+    if (kIsWeb) {
+      final uri = Uri.parse("https://us-central1-omnyqr-web-proxy.cloudfunctions.net/sendCallProxy");
+
+      final body = {
+        "calleeId": id,
+        "notifType": type,
+        "utilityName": name,
+      };
+
+      print('🌐 Web → Chiamata a Firebase Proxy con: $body');
+
+      return makeAuthCall(() {
+        return client.responsePost<String>(
+          uri.toString(),
+          body,
+        );
+      });
+    } else {
+      return makeAuthCall(() {
+        return client.responseGet<String>(
+          Urls.sendPush,
+          null,
+          {
+            'calleeId': id,
+            'notifType': type,
+            'utilityName': name,
+          },
+        );
+      });
+    }
   }
+
+
+
 }

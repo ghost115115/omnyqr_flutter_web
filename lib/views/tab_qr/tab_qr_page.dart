@@ -79,7 +79,8 @@ class QrPage extends StatelessWidget {
                               .copyWith(overscroll: false),
                           child: SingleChildScrollView(
                               child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                 SizedBox(
                                   height: 10.h,
@@ -112,6 +113,7 @@ class QrPage extends StatelessWidget {
                                       CommonInconButton(
                                         radius: 0.0,
                                         title: tr('scan'),
+
                                       ),
                                     ],
                                   ),

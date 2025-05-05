@@ -1,7 +1,7 @@
 // ignore_for_file: must_be_immutable, unrelated_type_equality_checks
 
 import 'dart:async';
-import 'dart:io';
+//import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,6 +19,8 @@ import 'package:omnyqr/services/signaling_service.dart';
 import 'package:omnyqr/views/main_container/bloc/container_bloc.dart';
 import 'package:omnyqr/views/main_container/bloc/container_event.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 
 class CallScreen extends StatefulWidget {
   final String? callerId, calleeId, name, surname;
@@ -80,9 +82,9 @@ class _CallScreenState extends State<CallScreen> with WidgetsBindingObserver {
   void initState() {
     // initializing renderers
 
-    if (Platform.isAndroid) {
-      checkSpeaker();
-    }
+    /*if (!kIsWeb && Platform.isAndroid) {
+    //  checkSpeaker();
+    }*/
 
     WakelockPlus.enable();
     // setup Peer Connection
@@ -123,13 +125,29 @@ class _CallScreenState extends State<CallScreen> with WidgetsBindingObserver {
       Navigator.pop(context, 'rejected');
     });
 
-    SignallingService.instance.socket!.on("SendNotification", (data) async {
+   /* SignallingService.instance.socket!.on("SendNotification", (data) async {
       context.read<ContainerBloc>().add(SendNotificationEvent(
             id: widget.calleeId,
             type: 'CALL',
             name: widget.nameToCallee,
           ));
+    });*/
+    SignallingService.instance.socket!.on("SendNotification", (data) async {
+      print('📤 Inviando notifica con calleeId: ${widget.calleeId}, type: CALL');
+
+      final calleeId = widget.calleeId ?? '';
+
+      if (calleeId.isNotEmpty) {
+        context.read<ContainerBloc>().add(SendNotificationEvent(
+          id: calleeId,
+          type: 'CALL',
+          name: widget.nameToCallee,
+        ));
+      } else {
+        print('❌ [Web] calleeId mancante: notifica non inviata');
+      }
     });
+
     SignallingService.instance.socket!.on("setVideoAndMic", (data) {
       setState(
         () {
@@ -168,20 +186,10 @@ class _CallScreenState extends State<CallScreen> with WidgetsBindingObserver {
 
     _localStream = await navigator.mediaDevices.getUserMedia({
       'audio': isAudioOn,
-      'video': isVideoOn
-          ? {
-              'facingMode': isFrontCameraSelected ? 'user' : 'environment',
-              'mandatory': {
-                'minWidth':
-                    '640', // Provide your own width, height and frame rate here
-                'minHeight': '480',
-                'minFrameRate': '30',
-              },
-            }
-          : false,
+      'video': false,
     });
 
-    _localStream!.getAudioTracks()[0].enableSpeakerphone(true);
+  //  _localStream!.getAudioTracks()[0].enableSpeakerphone(true);
 
     // add mediaTrack to peerConnection
     _localStream!.getTracks().forEach((track) {
@@ -321,19 +329,9 @@ class _CallScreenState extends State<CallScreen> with WidgetsBindingObserver {
     // get localStream
     _localStream = await navigator.mediaDevices.getUserMedia({
       'audio': isAudioOn,
-      'video': isVideoOn
-          ? {
-              'facingMode': isFrontCameraSelected ? 'user' : 'environment',
-              'mandatory': {
-                'minWidth':
-                    '640', // Provide your own width, height and frame rate here
-                'minHeight': '480',
-                'minFrameRate': '30',
-              },
-            }
-          : false,
+      'video': false,
     });
-    _localStream!.getAudioTracks()[0].enableSpeakerphone(true);
+    //_localStream!.getAudioTracks()[0].enableSpeakerphone(true);
 
     // add mediaTrack to peerConnection
     _localStream!.getTracks().forEach((track) {
@@ -428,12 +426,12 @@ class _CallScreenState extends State<CallScreen> with WidgetsBindingObserver {
 
   _toggleSpeakerAndroid() async {
     if (speaker == false) {
-      _localStream!.getAudioTracks()[0].enableSpeakerphone(true);
+    //  _localStream!.getAudioTracks()[0].enableSpeakerphone(true);
       setState(() {
         speaker = true;
       });
     } else {
-      _localStream!.getAudioTracks()[0].enableSpeakerphone(false);
+     // _localStream!.getAudioTracks()[0].enableSpeakerphone(false);
       setState(() {
         speaker = false;
       });
@@ -505,13 +503,14 @@ class _CallScreenState extends State<CallScreen> with WidgetsBindingObserver {
       }
     };
 
-    _localRTCVideoRenderer.errorListener((value) {
+
+   /* _localRTCVideoRenderer.errorListener((value) {
       debugPrint("localRTCVideoRenderer $value");
     });
 
     _remoteRTCVideoRenderer.errorListener((value) {
       debugPrint("remoteRTCVideoRenderer $value");
-    });
+    });*/
 
     return Scaffold(
       backgroundColor: AppColors.commonWhite,
@@ -561,14 +560,14 @@ class _CallScreenState extends State<CallScreen> with WidgetsBindingObserver {
   }
 
   Widget _activeCallView(AccountType? type) {
-    if (Platform.isIOS) {
+   /* if (!kIsWeb && Platform.isIOS) {
       Future.delayed(const Duration(seconds: 1), () {
         if (!firstSetSpeaker) {
           MinePushkit.instance.setAudioSession();
           firstSetSpeaker = true;
         }
       });
-    }
+    }*/
     return SafeArea(
       child: Column(
         children: [
@@ -626,7 +625,7 @@ class _CallScreenState extends State<CallScreen> with WidgetsBindingObserver {
                   onPressed: _toggleMic,
                   iconSize: 30.h,
                 ),
-                Platform.isIOS
+                /*Platform.isIOS
                     ? IconButton(
                         onPressed: _toogleSpeaker,
                         icon: SvgPicture.asset(
@@ -640,7 +639,7 @@ class _CallScreenState extends State<CallScreen> with WidgetsBindingObserver {
                           speaker ? AppImages.volumeUp : AppImages.volumeMute,
                         ),
                         iconSize: 30.h,
-                      ),
+                      ),*/
                 IconButton(
                   icon: const Icon(Icons.call_end),
                   iconSize: 30.h,
@@ -670,14 +669,14 @@ class _CallScreenState extends State<CallScreen> with WidgetsBindingObserver {
     );
   }
 
-  checkSpeaker() async {
+  /*checkSpeaker() async {
     bool val = speaker = await AudioCheck.areSpeakersActive;
     setState(
       () {
         speaker = val;
       },
     );
-  }
+  }*/
 
   void _startTimer() {
     if (mounted) {

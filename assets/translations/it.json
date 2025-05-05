@@ -103,7 +103,8 @@
     "association_created": "Creazione avvenuta con successo",
     "utility_success": "Utenza creata con successo",
     "utility_error": "Si è verificato un errore. Riprovare",
-    "delete_utility": "Attenzione!\nConfermando con il 'Si' la tua utenza verrà eliminata.\nNon sarà possibile recuperarla in nessun modo, Continuare?",
+    "delete_utility": "Attenzione!\nScrivere 'delete' per eliminare l'utenza.\nConfermando con il 'Si' la tua utenza verrà eliminata.\nNon sarà possibile recuperarla in nessun modo, Continuare?",
+    "type_delete_to_confirm": "Scrivere 'delete' per abilitare il tasto 'Si'",
     "delete_utility_success": "Utenza eliminata con successo",
     "update_success": "Utenza aggiornata con successo",
     "update_error": "Si è verificato un errore",
@@ -213,10 +214,10 @@
     "manage_deviation": "Gestione Deviazione",
     "user_deviation": "Utente deviazione",
     "no_user_deviation": "Nessun Utente deviazione",
-    "call_deviation_title": "Seleziona i citofoni dai quali non vuoi essere chiamato",
+    "call_deviation_title": "Seleziona le utenze che vuoi inoltrare",
     "call_deviation_empty_state": "Nessun citofono disponibile",
     "no_backup_referent": "Nessun deviatore di chiamata",
-    "no_backup_referent_explain" : "Questa utenza non ha un utente su cui deviare le chiamate in caso di mancata disponibilità, e di conseguenza non è possibile sileziarla",
+    "no_backup_referent_explain" : "Attualmente, questa utenza non ha un utente designato per ricevere le chiamate in caso di indisponibilità, quindi non è possibile deviarla. Ti suggeriamo di assegnare un utente nelle impostazioni per abilitare questa funzione.",
     "success_deviation": "Le tue disponibilità sono state aggiornate correttamente",
     "deviation_message": "Utente non disponibile, deviazione di chiamata ad altro interno. Vuoi procedere?"
 }

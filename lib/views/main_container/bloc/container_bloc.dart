@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:omnyqr/bloc/authentication_bloc.dart';
@@ -167,8 +168,24 @@ class ContainerBloc extends Bloc<ContainerEvent, ContainerState> {
 
   _onSendNotification(
       SendNotificationEvent event, Emitter<ContainerState> emit) async {
+    /*ApiResponse<String> response = await _messageRepository.sendPush(
+        event.id ?? '', event.type ?? '', event.name ?? '');*/
+    final calleeId = (kIsWeb && (event.id == null || event.id!.isEmpty))
+        ? 'web-test-callee-id'
+        : event.id ?? '';
+
+    final notifType = (kIsWeb && (event.type == null || event.type!.isEmpty))
+        ? 'CALL'
+        : event.type ?? '';
+
+    final utilityName = event.name ?? 'Web Test';
+
     ApiResponse<String> response = await _messageRepository.sendPush(
-        event.id ?? '', event.type ?? '', event.name ?? '');
+      calleeId,
+      notifType,
+      utilityName,
+    );
+
     if (response.isSuccess) {
     } else {
       switch (response.message) {

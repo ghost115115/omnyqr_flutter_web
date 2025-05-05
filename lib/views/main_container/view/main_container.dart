@@ -1,6 +1,9 @@
 // ignore_for_file: unused_element
+
 import 'dart:async';
-import 'dart:io';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -57,7 +60,7 @@ class _MainContainerPageState extends State<MainContainerPage>
       setState(() => isAccepted = false);
     });
 
-    if (Platform.isIOS) {
+    if (!kIsWeb && Platform.isIOS) {
       MinePushkit.instance.didReciveIncomingPushNotification = ((data) {
         //    MinePushkit.instance.setAudioSession();
         _checkAndNavigationCallingPage();
@@ -71,7 +74,7 @@ class _MainContainerPageState extends State<MainContainerPage>
       debugPrint("Signaling server noticing incoming call...");
       incomingSDPOffer = data;
       debugPrint("INCOMING SDP: ${incomingSDPOffer}");
-      if (Platform.isIOS) {
+      if (!kIsWeb && Platform.isIOS) {
         MinePushkit.instance.didReciveIncomingPushNotification = ((data) {
           //    MinePushkit.instance.setAudioSession();
           _checkAndNavigationCallingPage();
@@ -88,7 +91,7 @@ class _MainContainerPageState extends State<MainContainerPage>
      * chiamata, se è così aprire direttamente la pagina della chiamata.
      */
 
-    if (Platform.isAndroid) {
+    if (!kIsWeb && Platform.isAndroid) {
       _checkAndNavigationCallingPage();
     }
 
@@ -176,7 +179,7 @@ class _MainContainerPageState extends State<MainContainerPage>
           ),
         ),
       );
-      if (Platform.isAndroid) {
+      if (!kIsWeb && Platform.isAndroid) {
         FlutterCallkitIncoming.endAllCalls();
       } else {
         await MinePushkit.instance.closeCall();
