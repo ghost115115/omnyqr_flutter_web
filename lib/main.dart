@@ -57,7 +57,11 @@ import 'views/main_container/bloc/container_event.dart';
 import 'views/personal_area/subviews/change_password/change_password.dart';
 import 'views/user_registration/registration_view.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:firebase_core/firebase_core.dart';
+import 'dart:html' as html;
+
+
+
+
 
 
 final RouteObserver<ModalRoute<void>> routeObserver = RouteObserver<ModalRoute<void>>();
@@ -255,6 +259,8 @@ void main() async {
   } else {
     await Firebase.initializeApp();
   }
+
+
   /**
    * Init Firebase
    */
@@ -306,6 +312,25 @@ void main() async {
   }
 
   await Firebase.initializeApp();
+  if (kIsWeb) {
+    await FirebaseMessaging.instance.deleteToken(); // Elimina token precedente
+
+    final newToken = await FirebaseMessaging.instance.getToken(); // Richiedi nuovo
+
+    final userAgent = html.window.navigator.userAgent;
+    final now = DateTime.now().toIso8601String();
+
+    if (newToken != null) {
+      print("♻️ Nuovo token Web generato: $newToken");
+      print("🧠 UserAgent: $userAgent");
+      print("⏱️ Data: $now");
+
+      await DeviceRepository(DeviceApiClient(PreferencesRepo()))
+          .registerFcmToken(newToken, '');
+    } else {
+      print("⚠️ Token FCM Web nullo");
+    }
+  }
 
   FirebaseMessaging.instance.onTokenRefresh.listen(
         (event) async {

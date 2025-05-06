@@ -251,20 +251,8 @@ class _MainContainerPageState extends State<MainContainerPage>
                       style: AppTypografy.mainContainerAppBarTitle),
                 ),
                 const Spacer(),
-                InkWell(
-                  onTap: () {
-                    Navigator.of(context).pushNamed(Routes.personalArea);
-                  },
-                  splashColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  hoverColor: Colors.transparent,
-                  child: SvgPicture.asset(
-                    AppImages.account,
-                  ),
-                ),
-                SizedBox(
-                  width: 30.w,
-                ),
+
+
               ],
             ),
             body: const Stack(

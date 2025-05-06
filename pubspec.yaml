@@ -75,6 +75,7 @@ dependencies:
   mine_pushkit:
     path: package/mine_pushkit
   wakelock_plus: ^1.1.0
+  firebase_auth: ^5.5.3
 
 
 dev_dependencies:

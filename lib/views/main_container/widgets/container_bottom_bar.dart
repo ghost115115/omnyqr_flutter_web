@@ -32,39 +32,7 @@ class ContainerBottomBar extends StatelessWidget {
               width: MediaQuery.of(context).size.width * 0.33,
             ),
           ),
-          BottomNavigationBar(
-            selectedFontSize: 8.h,
-            unselectedFontSize: 8.h,
-            selectedItemColor: AppColors.mainBlue,
-            unselectedItemColor: AppColors.mainBlue,
-            type: BottomNavigationBarType.fixed,
-            items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                  label: tr("bottom_bar_item_1"),
-                  icon: Padding(
-                      padding: EdgeInsets.all(5.w),
-                      child: SvgPicture.asset(AppImages.tab1)),
-                  backgroundColor: Colors.white),
-              BottomNavigationBarItem(
-                  label: tr("bottom_bar_item_2"),
-                  icon: Padding(
-                      padding: EdgeInsets.all(5.w),
-                      child: SvgPicture.asset(AppImages.tab2)),
-                  backgroundColor: Colors.white),
-              BottomNavigationBarItem(
-                  label: tr("bottom_bar_item_3"),
-                  icon: Padding(
-                      padding: EdgeInsets.all(5.w),
-                      child: SvgPicture.asset(AppImages.tab3)),
-                  backgroundColor: Colors.white),
-            ],
-            onTap: (index) {
-              context
-                  .read<ContainerBloc>()
-                  .add(BottomBarSelectionChange(selectedIndex: index));
-            },
-            currentIndex: state.bottomBarSelected,
-          ),
+
         ],
       );
     });
