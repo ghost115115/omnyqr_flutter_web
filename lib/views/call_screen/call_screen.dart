@@ -20,6 +20,7 @@ import 'package:omnyqr/views/main_container/bloc/container_bloc.dart';
 import 'package:omnyqr/views/main_container/bloc/container_event.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'dart:html' as html; // funziona solo su Web
 
 
 class CallScreen extends StatefulWidget {
